@@ -20,3 +20,14 @@ export async function getMe(token: string): Promise<User> {
   const res = await apiFetch<User>("/auth/me", { token });
   return res.data;
 }
+
+// === TAMBAHAN BARU UNTUK AKTIVASI AKUN ===
+export async function activateAccount(
+  token: string,
+  password: string,
+): Promise<void> {
+  await apiFetch("/auth/activate", {
+    method: "POST",
+    body: JSON.stringify({ token, password }),
+  });
+}

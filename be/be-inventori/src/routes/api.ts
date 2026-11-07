@@ -1,5 +1,6 @@
 import express from "express";
 import authController from "../controllers/auth.controller";
+import activationController from "../controllers/activation.controller"; // <-- 1. Import controller aktivasi
 import categoryController from "../controllers/category.controller";
 import equipmentController from "../controllers/equipment.controller";
 import loanController from "../controllers/loan.controller";
@@ -13,11 +14,27 @@ import { requireRole } from "../middlewares/role";
 const router = express.Router();
 
 router.post("/auth/login", authController.login);
+router.post("/auth/activate", activationController.activateUser); // <-- 2. Daftarkan rute aktivasi (tanpa middleware agar bisa diakses dari email)
 router.get("/auth/me", authMiddleware, authController.me);
 
-router.get("/users", authMiddleware, requireRole("admin"), userController.findAll);
-router.post("/users", authMiddleware, requireRole("admin"), userController.create);
-router.put("/users/:id", authMiddleware, requireRole("admin"), userController.update);
+router.get(
+  "/users",
+  authMiddleware,
+  requireRole("admin"),
+  userController.findAll,
+);
+router.post(
+  "/users",
+  authMiddleware,
+  requireRole("admin"),
+  userController.create,
+);
+router.put(
+  "/users/:id",
+  authMiddleware,
+  requireRole("admin"),
+  userController.update,
+);
 
 const admin = [authMiddleware, requireRole("admin")];
 const anyUser = [authMiddleware];
